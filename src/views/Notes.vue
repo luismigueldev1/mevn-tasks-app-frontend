@@ -55,6 +55,9 @@
 .form__title{
   text-align: left;
 }
+table{
+  text-align: start;
+}
 </style>>
 <script>
 export default {
@@ -68,7 +71,10 @@ export default {
     };
   },
   created() {
-    this.getNotes();
+    this.getNotes()
+    setInterval(()=>{
+      this.getNotes()
+    }, 5000)
   },
   methods: {
     async getNotes() {
@@ -80,28 +86,26 @@ export default {
             console.log(data)
             this.notes = data
         }catch(e){
-            console.log(e);
+            console.log(e)
             
         } */
       this.axios
         .get("/notes")
         .then(res => (this.notes = res.data))
-        .catch(e => console.log(e.response));
+        .catch(e => console.log(e.response))
     },
     addNote() {
       this.axios
         .post("/new", this.note)
         .then(res => {
-          this.getNotes();
-          this.note = {};
+          this.getNotes()
+          this.note = {}
           this.mensaje = { color: "success", texto: "Note Added Successfuly" }
-          this.showAlert();
+          this.showAlert()
         })
         .catch(e => {
-          console.log(e.message);
-
           this.mensaje = { color: "danger", texto: "Error Adding a New Note" }
-          this.showAlert();
+          this.showAlert()
         });
     },
     deleteNote(id){
@@ -119,10 +123,10 @@ export default {
 
     },
     countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown;
+      this.dismissCountDown = dismissCountDown
     },
     showAlert() {
-      this.dismissCountDown = this.dismissSecs;
+      this.dismissCountDown = this.dismissSecs
     }
   }
 };
