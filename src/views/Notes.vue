@@ -10,7 +10,7 @@
       @dismiss-count-down="countDownChanged"
     >{{mensaje.texto}}</b-alert>
 
-    <form @submit.prevent="addNote()">
+    <form @submit.prevent="addNote()" v-if="!editForm">
       <h3 class="form__title">Add new Note</h3>
       <input
         type="text"
@@ -26,7 +26,27 @@
       />
       <b-button class="btn-success btn-block my-2" type="submit">Add new</b-button>
     </form>
-    <p class="table" v-if="notes.length === 0">No hay notas para mostrar</p>
+
+     <form @submit.prevent="updateNote(note)" v-if="editForm">
+      <h3 class="form__title">Update note</h3>
+      <p class="form__title">Note ID: {{note._id}}</p>
+      <input
+        type="text"
+        class="form-control my-2"
+        placeholder="Nombre de la nota"
+        v-model="note.nombre"
+      />
+      <input
+        type="text"
+        class="form-control my-2"
+        placeholder="Descripción de la nota"
+        v-model="note.descripcion"
+      />
+      <b-button class="btn-warning btn-block my-2" type="submit">Confirm Update</b-button>
+      <b-button class="btn-secondary btn-block my-2" type="submit" @click.prevent="cancelUpdate()">Cancel</b-button>
+    </form>
+
+    <h5 class="mt-5" v-if="notes.length === 0"> <strong>No hay notas para mostrar </strong></h5>
     <p />
     <table class="table" v-if="notes.length >= 1">
       <thead>
@@ -39,12 +59,12 @@
       </thead>
       <tbody>
         <tr v-for="(note, index) in notes" :key="index">
-          <td scope="row">{{ index+1 }}</td>
+          <td scope="row">{{ note._id }}</td>
           <td>{{ note.nombre }}</td>
           <td>{{ note.descripcion }}</td>
           <td>
-            <b-button @click="updateNote(note._id)" class="btn-warning btn-sm ml-2">Update</b-button>
-            <b-button @click="deleteNote(note._id)" class="btn-danger btn-sm ml-2">Delete</b-button>
+            <b-button @click="updateNoteForm(note._id )" class="btn-warning btn-sm ml-2 ">Update</b-button>
+            <b-button @click="deleteNote(note._id)" class="btn-danger btn-sm ml-2 ">Delete</b-button>
           </td>
         </tr>
       </tbody>
@@ -67,7 +87,8 @@ export default {
       note: { nombre: "", descripcion: "" },
       mensaje: { color: "", texto: "" },
       dismissSecs: 5,
-      dismissCountDown: 0
+      dismissCountDown: 0,
+      editForm: false,
     };
   },
   created() {
@@ -121,6 +142,32 @@ export default {
           this.showAlert()
         })
 
+    },
+    updateNoteForm(id){
+      this.editForm = true
+      this.axios
+        .get("/note/"+id)
+        .then(res => this.note = res.data)
+        .catch(e => console.log(e.message))
+      window.scroll(0,0)   
+    },
+    updateNote(note){
+        this.axios
+          .put('/note/'+note._id, note )
+          .then(res => {
+            this.note = {}
+            this.editForm = false
+            this.getNotes()
+            this.mensaje = { color: "success", texto: "Note Updated Successfuly" }
+            this.showAlert()
+          })
+          .catch(e => 
+            console.log(e.message)
+          )
+    },
+    cancelUpdate(){
+      this.editForm = false
+      this.note = {}
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
