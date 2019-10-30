@@ -25,6 +25,11 @@ export default new Router({
       path: '/notes',
       name: 'notes',
       component: () => import(/* webpackChunkName: "about" */ './views/Notes.vue')
+    },
+    {
+      path: '*',
+      name: '404',
+      component: () => import(/* webpackChunkName: "about" */ './views/404.vue')
     }
   ]
 })
