@@ -80,6 +80,7 @@ table{
 }
 </style>>
 <script>
+import { setInterval } from 'timers';
 export default {
   data() {
     return {
@@ -88,15 +89,17 @@ export default {
       mensaje: { color: "", texto: "" },
       dismissSecs: 5,
       dismissCountDown: 0,
-      editForm: false,
+      editForm: false
     };
   },
   created() {
     this.getNotes()
-    setInterval(()=>{
-      this.getNotes()
-    }, 5000)
+    //this.getNotesInterval = setInterval(this.getNotes, 5000)
   },
+  //beforeDestroy(){
+    //clearInterval(this.getNotesInterval)
+
+  //}, 
   methods: {
     async getNotes() {
       //Se puede usar fetch
