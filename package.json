@@ -1,6 +1,6 @@
 {
-  "name": "mevn_course_frontend",
-  "version": "0.1.0",
+  "name": "mevn-tasks-app-frontend",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

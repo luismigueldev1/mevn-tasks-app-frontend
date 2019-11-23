@@ -1,4 +1,4 @@
-# mevn_course_frontend
+# mevn-tasks-app-frontend
 
 ## Project setup
 ```
